@@ -18,15 +18,29 @@ def getTicketData(option, ticket):
 
     data = response.json()
 
-    # print the given ticket
+    # print ticket(s)
     if option == "2":
-        print( 'Given Ticket = ', data['tickets'][ticket]['raw_subject'] )
+        #user enters ticket outside of range
+        if len(data['tickets']) < ticket or ticket < 1:
+            print("Invalid ticket: Make sure you enter the correct ticket id [1 to num of tickets]")
+        else:
+            print( 'Ticket ID: ', data['tickets'][ticket - 1]['id'] )
+            print( 'Subject: ', data['tickets'][ticket - 1]['subject'] )
+            print( 'Descripton: ', data['tickets'][ticket - 1]['description'] )
+            print( 'Status: ', data['tickets'][ticket - 1]['status'] )
+            print( 'Submitted by ', data['tickets'][ticket - 1]['submitter_id'], " on ", data['tickets'][ticket - 1]['created_at'] )
     else:
+        #print all tickets, 25 at a time
         while url:
             response = pip._vendor.requests.get(url, auth=(user, pwd))
             data = response.json()
-            for ticket in data['tickets']:
-                print(ticket['id'])
+            for ind_tix in data['tickets']:
+                print("---------------------------------------------------------------------------")
+                print( 'Ticket ID: ', ind_tix['id'] )
+                print( 'Subject: ', ind_tix['subject'] )
+                print( 'Descripton: ', ind_tix['description'] )
+                print( 'Status: ', ind_tix['status'] )
+                print( 'Submitted by ', ind_tix['submitter_id'], " on ", ind_tix['created_at'] )
             if data['meta']['has_more']:
                 url = data['links']['next']
             else:
