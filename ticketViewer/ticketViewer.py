@@ -1,4 +1,6 @@
 import pip._vendor.requests
+import getpass
+
 
 def getTicketData(option, ticket, url, user, pwd):
     #divider
@@ -56,7 +58,7 @@ def main():
     #collecting credentials
     subdomain = input("Please provide the subdomain: ")
     email = input("Please provide the email address associated with the account: ")
-    password = input("Please provide the password of the associated account: ")
+    password = getpass.getpass("Please provide the password of the associated account(it is hidden): ")
 
     print("---------------------------------------------------------------------------")
 
