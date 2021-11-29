@@ -1,19 +1,18 @@
 import pip._vendor.requests
 
-def getTicketData(option, ticket):
+def getTicketData(option, ticket, url, user, pwd):
     #divider
     print("---------------------------------------------------------------------------")
-    # set the request parameters
-    url = 'https://zcctickets0823.zendesk.com/api/v2/tickets' + '?page[size]=25'
-    user = 'ishaan.shah823@gmail.com'
-    pwd = 'isatus4Fun'
 
+    #creating full url with the given subdomain
+    url = 'https://' + url + '.zendesk.com/api/v2/tickets?page[size]=25'
     # do the http get request
     response = pip._vendor.requests.get(url, auth=(user, pwd))
 
     # error connecting
     if response.status_code != 200:
         print('status:', response.status_code, 'error with the request, exiting.')
+        print("Make sure you entered the correct subdomin and just the subdomain (https://{subdomain}.zendesk.com)")
         exit()
 
     data = response.json()
@@ -48,23 +47,38 @@ def getTicketData(option, ticket):
     #divider
     print("---------------------------------------------------------------------------")
 
-userInput = " "
-while userInput != "q":
-    print("Press 1 to view all tickets")
-    print("Press 2 to view individual tickets")
-    print("Press q to quit")
-    userInput = input("Enter an option: ")
+def main():
+    userInput = " "
+    #introduction
+    print("Hello! Welcome to the ticket viewer! Please enter the following credentials to continue: ")
+    print("---------------------------------------------------------------------------")
 
-    if userInput == "1":
-        print("All tickets")
-        getTicketData(userInput, -1)
-    elif userInput == "2":
-        ticketNum = input("Which ticket would you like to view: ")
-        ticketNum = int(ticketNum)
-        getTicketData(userInput, ticketNum)
-        #print that ticket
-    elif userInput == "q":
-        continue
-    else:
-        print("Invalid Command! Please type one of the commands shown above.")
+    #collecting credentials
+    subdomain = input("Please provide the subdomain: ")
+    email = input("Please provide the email address associated with the account: ")
+    password = input("Please provide the password of the associated account: ")
 
+    print("---------------------------------------------------------------------------")
+
+    #requesting user input
+    while userInput != "q":
+        print("Press 1 to view all tickets")
+        print("Press 2 to view individual tickets")
+        print("Press q to quit")
+        userInput = input("Enter an option: ")
+
+        if userInput == "1":
+            print("All tickets")
+            getTicketData(userInput, -1, subdomain, email, password)
+        elif userInput == "2":
+            ticketNum = input("Which ticket would you like to view: ")
+            ticketNum = int(ticketNum)
+            getTicketData(userInput, ticketNum, subdomain, email, password)
+            #print that ticket
+        elif userInput == "q":
+            continue
+        else:
+            print("Invalid Command! Please type one of the commands shown above.")
+
+if __name__ == "__main__":
+    main()
